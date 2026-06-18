@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+# jetson-new — bootstrap a new uv project on this Jetson with all the camera/GPU gotchas handled.
+#
+# Usage:
+#   jetson-new <project_name>          # creates ./project_name with everything set up
+#   jetson-new                         # initialises the *current* directory
+#
+# What it does:
+#   1. uv init
+#   2. uv venv --system-site-packages --python /usr/bin/python3   (so system cv2 is visible)
+#   3. uv add "numpy<2"                                            (system cv2 has NumPy 1.x ABI)
+#   4. Adds [tool.uv].override-dependencies to pyproject.toml      (blocks transitive opencv-python)
+#   5. Drops healthcheck.py in if available next to this script    (optional)
+
+set -euo pipefail
+
+NAME="${1:-}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+if [[ -n "$NAME" ]]; then
+    if [[ -e "$NAME" ]]; then
+        echo "error: '$NAME' already exists" >&2
+        exit 1
+    fi
+    mkdir "$NAME"
+    cd "$NAME"
+    INIT_ARGS=()
+else
+    if [[ -f pyproject.toml ]]; then
+        echo "error: pyproject.toml already exists in $(pwd); refusing to clobber" >&2
+        exit 1
+    fi
+    INIT_ARGS=()
+fi
+
+echo "[1/4] uv init"
+uv init "${INIT_ARGS[@]}" >/dev/null
+
+echo "[2/4] uv venv --system-site-packages --python /usr/bin/python3"
+rm -rf .venv   # uv init may have created one without the flag
+uv venv --system-site-packages --python /usr/bin/python3 >/dev/null
+
+echo "[3/4] Pinning numpy<2"
+uv add "numpy<2" >/dev/null
+
+echo "[4/4] Adding opencv-python override to pyproject.toml"
+if ! grep -q "override-dependencies" pyproject.toml; then
+    cat >> pyproject.toml << 'EOF'
+
+[tool.uv]
+override-dependencies = [
+    "opencv-python ; sys_platform == 'never'",
+    "opencv-python-headless ; sys_platform == 'never'",
+]
+EOF
+fi
+
+# Optional: drop healthcheck.py if it lives next to this script
+if [[ -f "$SCRIPT_DIR/healthcheck.py" ]]; then
+    cp "$SCRIPT_DIR/healthcheck.py" .
+    echo "      (copied healthcheck.py)"
+fi
+
+echo
+echo "Done. Verify with:"
+echo "  cd $(pwd)"
+echo "  source .venv/bin/activate"
+echo "  python -c 'import cv2; print(cv2.__file__)'"
+echo "  # expect: /usr/lib/python3/dist-packages/cv2..."
+[[ -f healthcheck.py ]] && echo "  python healthcheck.py"

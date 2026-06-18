@@ -1,0 +1,22 @@
+# uv / venv
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+.python-version
+
+# camera output
+camera_test_out/
+*.jpg
+*.mp4
+/tmp/test.jpg
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*~
+
+# OS
+.DS_Store
+Thumbs.db
