@@ -1,6 +1,6 @@
 # 3. Troubleshooting
 
-Run `python healthcheck.py` first — it isolates which layer is broken. Then match the symptom below.
+Run `python healthcheck.py` first. Then match the symptom below.
 
 ## `ModuleNotFoundError: No module named 'cv2'`
 
@@ -21,7 +21,7 @@ uv pip uninstall opencv-python opencv-python-headless
 uv sync
 ```
 
-Then check that `pyproject.toml` has the override block — without it, the next `uv sync` will reinstall the bad wheel:
+Then check that `pyproject.toml` has the override block (without it, the next `uv sync` will reinstall the bad wheel):
 
 ```toml
 [tool.uv]

@@ -1,6 +1,6 @@
 # 2. Daily project workflow
 
-Once the camera is set up at the system level, this is how you work day-to-day. The whole goal is: **use uv exactly like normal** — with three small things handled for you.
+Once the camera is set up at the system level, this is how you work day-to-day. The whole goal is: **use uv exactly like normal**, with three small things handled for you.
 
 ## The three things that differ from a normal uv project
 

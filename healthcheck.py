@@ -30,7 +30,7 @@ def warn(msg: str):
     print(f"  [WARN] {msg}")
 
 
-def check_cv2_build() -> tuple[bool, "cv2 module | None"]:
+def check_cv2_build(): 
     section("OpenCV")
     try:
         import cv2

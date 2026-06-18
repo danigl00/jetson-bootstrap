@@ -1,6 +1,6 @@
 # 1. Camera setup — getting IMX219 detected on JetPack 6 Super
 
-This is the part you only do once per Jetson (or after a re-flash). Goal: have `/dev/video0` exist and respond to `nvarguscamerasrc`.
+Only do once per Jetson (or after a re-flash). Goal: have `/dev/video0` exist and respond to `nvarguscamerasrc`.
 
 ## Why it's not just "plug in and go"
 

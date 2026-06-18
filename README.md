@@ -47,7 +47,7 @@ sudo fdtoverlay \
 sudo reboot
 
 # 4. After reboot, install this repo's helpers
-git clone <this-repo-url> ~/jetson-bootstrap
+git clone https://github.com/danigl00/jetson-bootstrap ~/jetson-bootstrap
 cd ~/jetson-bootstrap
 ./install.sh
 ```
